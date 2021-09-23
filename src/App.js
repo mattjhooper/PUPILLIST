@@ -1,22 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import Loader from "react-loader-spinner";
 
-import PupilsList from "./components/PupilList";
-import PupilActions from "./components/PupilActions";
 import Login from "./components/Login";
 import Logout from "./components/Logout";
 import "./App.css";
-import { useState } from "react";
-
-const loader = (
-  <Loader
-    type="ThreeDots"
-    color="#230052"
-    height={100}
-    width={100}
-    timeout={3000} //3 secs
-  />
-);
+import Pupils from "./components/Pupils";
 
 function App() {
   const [token, setToken] = useState(null);
@@ -77,54 +65,13 @@ function App() {
     }
   };
 
-  const fetchPupilsHandler = async () => {
-    console.log("fetchPupilsHandler");
-
-    if (!token) {
-      alert("Please Login");
-      return;
-    }
-
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      const response = await fetch("https://localhost:5001/Pupils/", {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-      const data = await response.json();
-      setPupils(data);
-
-      console.log(data);
-    } catch (error) {
-      console.log(error.message);
-      setError(error.message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  let content = <p>Found no pupils.</p>;
-
-  if (pupils.length > 0) {
-    content = <PupilsList pupils={pupils} />;
-  }
-
-  if (error) {
-    content = <p>{error}</p>;
-  }
-
-  if (isLoading) {
-    content = loader;
-  }
-
   return (
     <React.Fragment>
       {token ? (
-        <Logout onLogout={logoutHandler} />
+        <React.Fragment>
+          <Logout onLogout={logoutHandler} />
+          <Pupils token={token} />
+        </React.Fragment>
       ) : (
         <Login
           defaultUsername="matt@example.com"
@@ -132,8 +79,6 @@ function App() {
           onLogin={loginHandler}
         />
       )}
-      {token && <PupilActions onFetchPupils={fetchPupilsHandler} />}
-      <section>{content}</section>
     </React.Fragment>
   );
 }

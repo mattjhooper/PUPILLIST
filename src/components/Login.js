@@ -1,4 +1,5 @@
 import React, { useRef, useState } from "react";
+import Modal from "../ui/Modal";
 import classes from "./Login.module.css";
 
 const isEmpty = (value) => value.trim() === "";
@@ -46,7 +47,7 @@ const Login = (props) => {
   }`;
 
   return (
-    <section>
+    <Modal>
       <form className={classes.form} onSubmit={loginHandler}>
         <div className={usernameControlClasses}>
           <label htmlFor="name">Username</label>
@@ -70,7 +71,7 @@ const Login = (props) => {
         </div>
         <button className={classes.submit}>Login</button>
       </form>
-    </section>
+    </Modal>
   );
 };
 
